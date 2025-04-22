@@ -42,4 +42,6 @@ public class ProductEntity {
     @Column(name = "is_disabled")
     private Boolean isDisabled;
 
+
+
 }

@@ -30,18 +30,6 @@ public class AdminUploadController {
         return ResponseEntity.ok("Fichier CSV traité et enregistré avec succès !");
     }
 
-    @GetMapping(value = "/all")
-    public List<ProductEntity> getAllProducts() {
-        return productService.findAll();
-    }
 
-    @GetMapping(value="/allbyname")
-    public Page<ProductEntity> getAllProductsByName(@RequestParam String name, @RequestParam int page, @RequestParam int size) {
-        return productService.findByName(name, page, size);
-    }
-    @GetMapping(value="/allbypage")
-    public Page<ProductEntityDto> getAllProductsByPage(@RequestParam int page, @RequestParam int size) {
-        return productService.finAll(page, size);
-    }
 
 }

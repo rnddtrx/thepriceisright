@@ -2,7 +2,7 @@ package be.dsystem.thepriceisright.controllers;
 
 import be.dsystem.thepriceisright.config.security.AuthenticationException;
 import be.dsystem.thepriceisright.config.security.JwtTokenRequest;
-import be.dsystem.thepriceisright.config.security.JwtTokenResponse;
+import be.dsystem.thepriceisright.config.security.JwtTokenResponseDto;
 import be.dsystem.thepriceisright.config.security.JwtTokenUtil;
 import be.dsystem.thepriceisright.config.security.userdetails.MyUserDetails;
 import be.dsystem.thepriceisright.dtos.CredentialsDto;
@@ -18,6 +18,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,10 +54,26 @@ public class AuthentificationController {
     @PostMapping
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtTokenRequest authenticationRequest)
             throws AuthenticationException {
-        Authentication auth = authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        final MyUserDetails userDetails = (MyUserDetails) auth.getPrincipal(); //userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtTokenResponse(token));
+        Authentication auth = this.authenticate(
+                authenticationRequest.getUsername(),
+                authenticationRequest.getPassword());
+
+        final MyUserDetails userDetails = (MyUserDetails) auth.getPrincipal();
+
+        String selectedRole = authenticationRequest.getSelectedRole();
+
+        boolean roleIsValid = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(r -> r.equals(selectedRole));
+
+        if (!roleIsValid) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("The selected role is not allowed.");
+        }
+
+        final String token = jwtTokenUtil.generateToken(userDetails.getUsername(), selectedRole);
+
+        return ResponseEntity.ok(new JwtTokenResponseDto(token));
     }
 
     //Methode du controller pour rafraichir un token (Adresse jwt.refresh.token.uri dans application properties)
@@ -69,7 +86,7 @@ public class AuthentificationController {
         MyUserDetails user = (MyUserDetails) userDetailsService.loadUserByUsername(username);
         if (jwtTokenUtil.canTokenBeRefreshed(token)) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
-            return ResponseEntity.ok(new JwtTokenResponse(refreshedToken));
+            return ResponseEntity.ok(new JwtTokenResponseDto(refreshedToken));
         } else {
             return ResponseEntity.badRequest().body(null);
         }

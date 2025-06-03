@@ -21,4 +21,5 @@ public class UserEntityDto implements Serializable {
     String email;
     String dateOfBirth;
     String password;
+    String profilePictureUrl;
 }

@@ -30,6 +30,7 @@ public class UserEntity {
     private String email;
     private String dateOfBirth;
     private String password;
+    private String profilePictureUrl;
 
     @ManyToMany
     @JoinTable(name = "user_entity_roleEntities",

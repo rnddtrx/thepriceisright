@@ -2,6 +2,7 @@ package be.dsystem.thepriceisright.services;
 
 import be.dsystem.thepriceisright.dtos.RoleEntityDto;
 import be.dsystem.thepriceisright.mappers.RoleEntityMapper;
+import be.dsystem.thepriceisright.model.RoleEntity;
 import be.dsystem.thepriceisright.repositories.RoleEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,10 @@ public class RoleService {
         var roleEntity = roleEntityMapper.toEntity(roleEntityDto);
         var savedRole = roleEntityRepository.save(roleEntity);
         return roleEntityMapper.toDto(savedRole);
+    }
+
+    public RoleEntity getRoleByName(String roleName) {
+        var roleEntity = roleEntityRepository.findByRoleName(roleName);
+        return roleEntity.orElse(null);
     }
 }

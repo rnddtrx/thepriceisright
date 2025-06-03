@@ -7,6 +7,7 @@ import be.dsystem.thepriceisright.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class AdminUploadController {
     @Autowired
     private ProductService productService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value ="/upload", consumes = "multipart/form-data")
     public ResponseEntity<String> uploadCSV(@RequestParam("file") MultipartFile file) {
         adminUploadService.parseNudgerCSV(file);

@@ -28,17 +28,19 @@ public class MyUserDetailsService implements UserDetailsService {
   @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-	 log.info("loadUserByUsername "+username);
+	 //log.info("loadUserByUsername "+username);
+
 	  Optional<MyUserDetails> user = Optional.empty();
+
 	  //Ici normalement je récupère le user selon le paramètre login
 	  Optional<UserEntity> userEntity = Optional.of(userService.getUserEntityByUsername(username));
 
 	  if(userEntity.isPresent()) {
-		  //Je récupère le student
+		  //Je récupère le user
 		  UserEntity ue = userEntity.get();
 		  //Je crée une liste de roles vide
 		  List<String> rolelist = new ArrayList<String>();
-		  //Je récupère les roles du student et je les ajoute à la liste sous forme de string
+		  //Je récupère les roles du  et je les ajoute à la liste sous forme de string
 		  ue.getRoleEntities().forEach(role -> rolelist.add(role.getRoleName().toUpperCase()));
 
 		  //Ici je crée un user spring sur base de mon Student

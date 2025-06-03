@@ -21,6 +21,7 @@ public class UserEntityProfileDto implements Serializable {
     String phoneNumber;
     String email;
     String dateOfBirth;
+    String profilePictureUrl;
     Set<RoleEntityDto1> roleEntities;
 
     /**

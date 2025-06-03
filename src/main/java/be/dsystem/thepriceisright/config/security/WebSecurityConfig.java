@@ -30,7 +30,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 //Activer la sécurité web
 @EnableWebSecurity()
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     //USER DETAIL SERVICE
@@ -50,11 +50,13 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                                .requestMatchers("/api/users").permitAll()
+                                //Si on veut permettre la création d'un nouveau compte par un user inconnu.
+                                .requestMatchers(HttpMethod.POST,"/api/users").permitAll()
+                                //Tout le monde doit pouvoir s'identifier sans être logué.
+                                .requestMatchers(HttpMethod.POST,"/api/auth").permitAll()
                                 .requestMatchers("/swagger").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/apidoc/**").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/api/auth").permitAll()
                                 .requestMatchers("/api/**").authenticated()
                                 .requestMatchers("/**").authenticated()
                                 .anyRequest().authenticated()

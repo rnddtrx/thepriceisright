@@ -15,12 +15,12 @@ public class ShopContoller {
     private ShopService shopService;
 
     @GetMapping(value="/allbypage")
-    public Page<ShopEntityDto> getAllProductsByPage(@RequestParam int page, @RequestParam int size) {
+    public Page<ShopEntityDto> getAllShopsByPage(@RequestParam int page, @RequestParam int size) {
         return shopService.getShops(page, size);
     }
 
     @GetMapping
-    public ShopEntityDto getProductById(@RequestParam int id) {
+    public ShopEntityDto getShopById(@RequestParam int id) {
         return shopService.getShopById(id);
     }
 

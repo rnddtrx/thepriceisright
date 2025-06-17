@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -22,4 +25,8 @@ public class ShopEntity {
     private String postalCode;
 
     private String websiteUrl;
+
+    @OneToMany(mappedBy = "shopEntity", orphanRemoval = true)
+    private Set<PriceEntity> priceEntities = new LinkedHashSet<>();
+
 }

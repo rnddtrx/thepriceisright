@@ -7,6 +7,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,6 +44,7 @@ public class ProductEntity {
     @Column(name = "is_disabled")
     private Boolean isDisabled;
 
-
+    @OneToMany(mappedBy = "productEntity", orphanRemoval = true)
+    private Set<PriceEntity> priceEntities = new LinkedHashSet<>();
 
 }
